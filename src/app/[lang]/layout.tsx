@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "../globals.css";
+import Navbar from "@/components/navbar";
+import { getDictionary, Locale } from "@/lib/get-dictionary";
 
 const geist = Geist({ subsets: ["latin"] });
 
@@ -27,15 +29,24 @@ export default async function RootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ lang: string }>; // Tipado como Promise
+  params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params; // Desembrulhando o idioma com await
+  const { lang } = await params;
+  const dict = await getDictionary(lang as Locale);
 
   return (
-    <html lang={lang} className="scroll-smooth">
-      <body className={`${geist.className} bg-slate-50 text-slate-900 antialiased selection:bg-indigo-100 selection:text-indigo-900`}>
-        <main className="relative flex min-h-screen flex-col">
-          {children}
+    // 'h-full' no html e body é essencial para que o 'h-screen' funcione corretamente
+    <html lang={lang} className="scroll-smooth h-full">
+      <body className={`${geist.className} bg-blue-100 antialiased h-full`}>
+        {/* 'h-screen' garante que o container principal tenha a altura exata da janela */}
+        <main className="flex flex-col h-screen overflow-hidden">
+          <Navbar dict={dict} lang={lang} />
+          
+          {/* 'flex-1' faz com que esta div ocupe todo o espaço restante abaixo da navbar */}
+          {/* 'overflow-y-auto' permite scroll APENAS se o conteúdo da página for realmente grande */}
+          <div className="flex-1 overflow-y-auto">
+            {children}
+          </div>
         </main>
       </body>
     </html>

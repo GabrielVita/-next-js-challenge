@@ -7,5 +7,11 @@
     "description": "Create lists, share with friends, and never miss the perfect gift again.",
     "buttonStart": "Get Started",
     "buttonHowItWorks": "How it works"
+  },
+  "nav": {
+    "events": "Events",
+    "feed": "Feed",
+    "gifts": "Gifts",
+    "login": "Sign in"
   }
 }
