@@ -13,5 +13,19 @@
     "feed": "Feed",
     "gifts": "Gifts",
     "login": "Sign in"
+  },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Join GiftWise and organizer your gifts",
+    "username": "Username",
+    "name": "Full name",
+    "age": "Age",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "hobbies": "Hobbies",
+    "password": "Password",
+    "button": "Create account",
+    "alreadyHaveAccount": "Already have an account? Log in"
   }
 }
