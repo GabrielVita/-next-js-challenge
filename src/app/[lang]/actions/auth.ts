@@ -3,6 +3,26 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
+import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
+
+export async function loginUser(lang: string, formData: FormData) {
+  try {
+    await signIn("credentials", {
+      id: formData.get("id"),
+      password: formData.get("password"),
+      // Agora aponta para a dashboard
+      redirectTo: `/${lang}/dashboard`, 
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return { error: "Credenciais inválidas." };
+    }
+    // O NextAuth usa o redirecionamento lançando um erro interno, 
+    // por isso precisamos dar throw se não for AuthError
+    throw error;
+  }
+}
 
 export async function checkUsername(username: string) {
   if (username.length < 3) return { available: true };

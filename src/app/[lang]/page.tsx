@@ -32,7 +32,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
           <a
-            href={`/${lang}/register`}
+            href={`/${lang}/login`}
             className="w-full sm:w-auto rounded-full bg-indigo-600 px-8 py-4 text-sm font-semibold text-white hover:bg-indigo-500 transition-all flex items-center justify-center gap-2"
           >
             {dict.home.buttonStart}
