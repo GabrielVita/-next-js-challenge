@@ -88,11 +88,11 @@ export async function getAvailableHobbies() {
 /**
  * Salva a seleção de hobbies do usuário logado
  */
-export async function saveUserHobbies(hobbyIds: string[]) {
+export async function saveUserHobbies(hobbyNames: string[]) {
   const session = await auth();
   
   if (!session?.user?.id) {
-    return { error: "Não autenticado" };
+    return { error: "Não autorizado" };
   }
 
   try {
@@ -100,14 +100,41 @@ export async function saveUserHobbies(hobbyIds: string[]) {
       where: { id: session.user.id },
       data: {
         hobbies: {
-          set: [],
-          connect: hobbyIds.map(id => ({ id }))
+          set: [], // Limpa as conexões antigas para evitar duplicatas no perfil
+          connectOrCreate: hobbyNames.map(name => {
+            const normalized = name.trim().toLowerCase(); // Salva sempre em minúsculo no banco
+            return {
+              where: { name: normalized },
+              create: { name: normalized }
+            };
+          })
         }
       }
     });
-    return { success: true }; // Apenas retorne sucesso
+
+    // Retornamos sucesso para o componente Client lidar com o redirect
+    return { success: true };
   } catch (error) {
-    console.error("Erro ao salvar:", error);
-    return { error: "Erro ao salvar no banco" };
+    console.error("Erro ao salvar hobbies:", error);
+    return { error: "Erro ao salvar seus interesses no banco." };
   }
 }
+
+export async function getTopHobbies() {
+  const hobbies = await prisma.hobby.findMany({
+    include: {
+      _count: {
+        select: { users: true } // Conta quantos users cada hobby tem
+      }
+    },
+    orderBy: {
+      users: {
+        _count: 'desc' // Ordena pelos mais populares
+      }
+    },
+    take: 10 // Pega apenas os 10 primeiros
+  });
+
+  return hobbies;
+}
+
