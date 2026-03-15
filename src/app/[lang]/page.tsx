@@ -2,24 +2,22 @@
 import { getDictionary, Locale } from "@/lib/get-dictionary";
 import { Gift, ArrowRight } from "lucide-react";
 
-export default async function Home({
-  params,
-}: {
-  params: Promise<{ lang: string }>; // Agora params é uma Promise
-}) {
-  // Aguardamos o params e garantimos que o lang seja tratado como o tipo Locale
+export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const resolvedParams = await params;
   const lang = resolvedParams.lang as Locale;
-  
   const dict = await getDictionary(lang);
 
   return (
-    <div className="relative isolate overflow-hidden bg-blue-100 min-h-screen">
+    // Mudamos 'min-h-screen' para 'h-full'
+    // 'flex flex-col justify-center' manterá seu conteúdo centralizado verticalmente no espaço disponível
+    <div className="relative isolate overflow-hidden bg-blue-100 h-full flex flex-col justify-center">
+      {/* Background Decorativo */}
       <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
-        <div className="relative left-[calc(50%-11rem)] aspect-1155/678 w-36.125rem -translate-x-1/2 rotate-30deg bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+        <div className="relative left-[calc(50%-11rem)] aspect-1155/678 w-36.125rem -translate-x-1/2 rotate-30deg bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-72.1875rem"></div>
       </div>
-      <div className="mx-auto max-w-2xl px-6 py-24 text-center flex flex-col items-center">
-        
+
+      <div className="mx-auto max-w-2xl px-6 py-12 text-center flex flex-col items-center">
+        {/* Ícone, Títulos e Botões permanecem iguais */}
         <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-600 shadow-lg animate-bounce">
           <Gift className="h-10 w-10 text-white" />
         </div>
