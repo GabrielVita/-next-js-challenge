@@ -1,4 +1,3 @@
-// prisma/schema.prisma
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -8,43 +7,43 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id           String    @id // Username único
-  password     String
-  name         String
-  avatar       String?   @db.Text
-  gender       String    
-  age          Int
-  hobbies      String[]  // Array de strings (nativo do Postgres)
-  
-  // Relacionamentos
-  friends      User[]    @relation("UserFriends")
-  friendOf     User[]    @relation("UserFriends")
-  events       Event[]
-  
-  // Presentes que o usuário "deu like" (sua própria lista de desejos)
-  wishlist     Gift[]    @relation("UserWishlist")
 
-  createdAt    DateTime  @default(now())
+model User {
+  id        String   @id
+  password  String
+  name      String
+  avatar    String?  @db.Text
+  gender    String
+  age       Int
+  
+  // RELAÇÃO ATUALIZADA: Muitos para Muitos com Hobby
+  hobbies   Hobby[]  @relation("UserHobbies")
+
+  friends   User[]   @relation("UserFriends")
+  friendOf  User[]   @relation("UserFriends")
+  events    Event[]
+  wishlist  Gift[]   @relation("UserWishlist")
+  createdAt DateTime @default(now())
+}
+
+model Hobby {
+  id    String @id @default(cuid())
+  name  String @unique
+  
+  users User[] @relation("UserHobbies")
+  gifts Gift[] @relation("GiftCategories")
 }
 
 model Event {
   id              String   @id @default(cuid())
   name            String
   isPublic        Boolean  @default(false)
-  
-  // Quem criou o evento
   creatorId       String
   creator         User     @relation(fields: [creatorId], references: [id])
-  
-  // Presenteado: Nome (texto) e link opcional para conta de amigo
   recipientName   String
-  recipientUserId String?  // ID do amigo se ele estiver no sistema
-  
-  // Presente escolhido para este evento (O ID do item do banco)
+  recipientUserId String?
   giftId          String?
   gift            Gift?    @relation(fields: [giftId], references: [id])
-
   createdAt       DateTime @default(now())
 }
 
@@ -52,17 +51,15 @@ model Gift {
   id           String   @id @default(cuid())
   title        String
   description  String
-  image        String?  @db.Text // Base64
-  
-  // Filtros para o algoritmo de sugestão
-  targetGender String?  // "masculino", "feminino" ou null (unissex)
+  image        String?  @db.Text
+  targetGender String?
   minAge       Int      @default(0)
   maxAge       Int      @default(100)
-  categories   String[] // Ex: ["tecnologia", "esportes"]
+  
+  // RELAÇÃO ATUALIZADA: Categorias agora são Hobbies
+  categories   Hobby[]  @relation("GiftCategories")
 
-  // Relações
-  likedBy      User[]   @relation("UserWishlist") // Quem quer ganhar isso
-  events       Event[]  // Eventos onde este presente foi o escolhido
-
+  likedBy      User[]   @relation("UserWishlist")
+  events       Event[]
   createdAt    DateTime @default(now())
 }
