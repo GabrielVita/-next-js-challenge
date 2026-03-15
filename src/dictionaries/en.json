@@ -2,7 +2,9 @@
   "home": {
     "title": "Gifting just got",
     "titleAccent": "smarter.",
-    "description": "Create lists, share with friends, and never miss the perfect gift again. GiftWise helps you organize wishes simply and elegantly.",
+    "call":"GiftWise",
+    "objetive": "helps you organize wishes simply and elegantly.",
+    "description": "Create lists, share with friends, and never miss the perfect gift again.",
     "buttonStart": "Get Started",
     "buttonHowItWorks": "How it works"
   }

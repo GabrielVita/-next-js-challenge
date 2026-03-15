@@ -2,7 +2,9 @@
   "home": {
     "title": "Presentear ficou mais",
     "titleAccent": "inteligente.",
-    "description": "Crie listas, compartilhe com amigos e nunca mais erre no presente. O GiftWise ajuda você a organizar desejos de forma simples e elegante.",
+    "call":"GiftWise",
+    "objetive": "ajuda você a organizar desejos de forma simples e elegante.",
+    "description": "Crie listas, compartilhe com amigos e nunca mais erre no presente.",
     "buttonStart": "Começar Agora",
     "buttonHowItWorks": "Como funciona"
   }

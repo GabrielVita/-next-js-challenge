@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import "../globals.css"; // Note o "../" pois agora o arquivo está uma pasta mais fundo
+import "../globals.css";
 
 const geist = Geist({ subsets: ["latin"] });
 
-// Função para gerar metadados dinâmicos baseados no idioma (opcional, mas recomendado)
-export async function generateMetadata({ params }: { params: { lang: string } }): Promise<Metadata> {
-  const isPt = params.lang === 'pt';
+// 1. Corrigindo o generateMetadata (params agora é Promise)
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ lang: string }> 
+}): Promise<Metadata> {
+  const { lang } = await params; // Aguardamos os parâmetros aqui
+  const isPt = lang === 'pt';
+  
   return {
     title: isPt ? "GiftWise | Escolha o presente ideal" : "GiftWise | Choose the perfect gift",
     description: isPt 
@@ -15,16 +21,18 @@ export async function generateMetadata({ params }: { params: { lang: string } })
   };
 }
 
-export default function RootLayout({
+// 2. Corrigindo o RootLayout (params agora é Promise)
+export default async function RootLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { lang: string };
+  params: Promise<{ lang: string }>; // Tipado como Promise
 }) {
+  const { lang } = await params; // Desembrulhando o idioma com await
+
   return (
-    // Aqui usamos o params.lang para definir o idioma da página
-    <html lang={params.lang} className="scroll-smooth">
+    <html lang={lang} className="scroll-smooth">
       <body className={`${geist.className} bg-slate-50 text-slate-900 antialiased selection:bg-indigo-100 selection:text-indigo-900`}>
         <main className="relative flex min-h-screen flex-col">
           {children}
